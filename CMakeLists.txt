@@ -28,6 +28,8 @@ juce_add_plugin(MoogLadderPlugin
     VST3_COPY_DIR "$ENV{APPDATA}/VST3"
 )
 
+juce_generate_juce_header(MoogLadderPlugin)
+
 target_sources(MoogLadderPlugin PRIVATE
     Source/MoogLadderPlugin.cpp
     Source/MoogLadderPluginPluginProcessor.cpp
@@ -38,7 +40,7 @@ target_sources(MoogLadderPlugin PRIVATE
 
 target_include_directories(MoogLadderPlugin PRIVATE
     Source
-    # JuceLibraryCode
+    ${CMAKE_CURRENT_BINARY_DIR}/MoogLadderPlugin_artefacts/JuceLibraryCode
 )
 
 target_compile_definitions(MoogLadderPlugin PRIVATE
