@@ -4,8 +4,7 @@ out/
 build/
 cmake-build-*/
 
-Builds/*/x64/
-Builds/*/*.xcodeproj/xcuserdata/
+Builds/
 JuceLibraryCode/
 
 # Visual Studio
@@ -30,7 +29,7 @@ xcuserdata/
 
 # MATLAB
 
-*.asv
+MATLAB/*.asv
 MATLAB/codegen/
 MATLAB/audioplugin/
 
