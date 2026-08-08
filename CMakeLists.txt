@@ -10,7 +10,7 @@ FetchContent_Declare(JUCE
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
     GIT_TAG origin/develop
 )
-set(JUCE_VST3_CAN_REPLACE_VST2 OFF CACHE BOOL "" FORCE)
+# set(JUCE_VST3_CAN_REPLACE_VST2 OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(JUCE)
 # add_subdirectory("C:/Program Files/JUCE" JUCE)
 
@@ -44,7 +44,7 @@ target_include_directories(MoogLadderPlugin PRIVATE
 )
 
 target_compile_definitions(MoogLadderPlugin PRIVATE
-    JUCE_VST_CAN_REPLACE_VST2=1
+    JUCE_VST3_CAN_REPLACE_VST2=0
     JUCE_WEB_BROWSER=0
     JUCE_USE_CURL=0
     JUCE_PLUGINHOST_VST3=0
