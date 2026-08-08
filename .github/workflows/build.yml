@@ -1,0 +1,11 @@
+name: Build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -B out/build/x64-debug
+      - name: Build
+        run: cmake --build out/build/x64-debug
