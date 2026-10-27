@@ -4,7 +4,7 @@
 
 [![Build](https://github.com/swijewardane/corporate-ladder-filter/actions/workflows/build.yml/badge.svg)](https://github.com/swijewardane/corporate-ladder-filter/actions)
 
-<!-- Screenshot: replace with an actual capture of the plugin GUI -->
+
 ![Corporate Ladder Filter GUI](Figures/plugin_in_DAW.png)
 
 ## Overview
@@ -36,13 +36,20 @@ y[n] = (F(x[n]) - F(x[n-1])) / (x[n] - x[n-1])
 
 This produces the same saturation curve with substantially reduced aliasing, verified against harmonic distortion measurements taken during development (see `MATLAB/Figures/`).
 
+<figure>
+  <img src = "Figures/adaa_comparison.png">
+  <p align = "center"><em> Application of ADAA is shown to have measurable reduction in harmonics above the fundamental frequency </em> </p>
+</figure>
+
+
+
 ## Development Process
 
 This plugin was prototyped in MATLAB before being translated to a production JUCE/C++ plugin:
 
-1. **Algorithm design & validation (MATLAB)** — the ladder filter, ADAA saturation, and GUI parameter mapping were built as a MATLAB `audioPlugin` class (`MATLAB/MoogLadderPlugin.m`), validated using exponential sine sweep measurements and Volterra/Hammerstein nonlinear system characterization (`MATLAB/Functions_Subclasses/`) to confirm the filter's nonlinear behavior matched expectations.
+1. **Algorithm design & validation (MATLAB)** — the ladder filter, ADAA saturation, and GUI parameter mapping were built as a MATLAB `audioPlugin` class (`MATLAB/Functions_Subclasses/MoogLadderPlugin.m`), validated using exponential sine sweep measurements and Volterra/Hammerstein nonlinear system characterization to confirm the filter's nonlinear behavior matched expectations.
 2. **Export** — the validated plugin was exported to a JUCE project via MATLAB's `generateAudioPlugin -juceproject`, which uses JUCE internally to generate a working C++ project from the MATLAB class.
-3. **Refinement (JUCE/C++)** — the generated project was hand-refined: migrated from Projucer to a CMake build (via `FetchContent`), fixed a VST2/VST3 parameter automation conflict, corrected parameter default states, and replaced GUI assets with the final Lumon-styled filmstrips and background.
+3. **Refinement (JUCE/C++)** — the generated project was hand-refined: migrated from Projucer to a CMake build (via `FetchContent`), fixed a VST2/VST3 parameter automation conflict, corrected parameter default states, and updated GUI assets with the final Lumon-styled filmstrips and background.
 
 See `MATLAB/` for the full prototype, including validation scripts and measurement figures.
 
