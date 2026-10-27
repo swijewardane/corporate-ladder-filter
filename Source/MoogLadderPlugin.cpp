@@ -30,6 +30,9 @@ static void getPluginInstance_init(MoogLadderPluginStackData *SD);
 
 static void getPluginInstance_new(MoogLadderPluginStackData *SD);
 
+static double onsetK();
+
+
 // Function Definitions
 double ParameterSmoother::step()
 {
@@ -430,6 +433,15 @@ void resetCImpl(MoogLadderPluginStackData *SD, double rate)
   plugin->GainSmoother.currentValue = b_rate;
   plugin->GainSmoother.targetValue = b_rate;
   plugin->GainSmoother.smoothingFactor = smoothingFactor;
+  const double lo = 20.0, hi = 0.45*rate;
+  plugin->kOnsetLogLo = std::log(lo);
+  plugin->kOnsetLogStep = (std::log(hi) - std::log(lo)) / (derivedAudioPlugin::kOnsetTableSize - 1);
+  for (int a=0; a<2; ++a) {
+    for (int i = 0; i < derivedAudioPlugin::kOnsetTableSize; ++i) {
+      plugin->kOnsetTable[a][i] = onsetK(std::exp(plugin->kOnsetLogLo + i*plugin->kOnsetLogStep), rate, a == 1);
+    }
+  }
+    
 }
 
 // End of code generation (MoogLadderPlugin.cpp)
