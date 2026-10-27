@@ -30,7 +30,7 @@ static void getPluginInstance_init(MoogLadderPluginStackData *SD);
 
 static void getPluginInstance_new(MoogLadderPluginStackData *SD);
 
-static double onsetK();
+static double onsetK(double fc, double fs, bool adaaOn);
 
 
 // Function Definitions
