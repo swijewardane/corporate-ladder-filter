@@ -34,6 +34,35 @@ static double onsetK(double fc, double fs, bool adaaOn);
 
 
 // Function Definitions
+static double onsetK(double fc, double fs, bool adaaOn) {
+  constexpr double pi = 3.14159265358979323846;
+  const double g = std::tan(pi*fc/fs);
+  const double b0 = g/(1.0 + g);
+  const double a1 = (g - 1.0)/(g + 1.0);
+
+  auto loopPhase = [&](double w) {
+    const double stage = -0.5 * w + std::atan2(a1*std::sin(w), 1.0 + a1*std::cos(w));
+    return 4.0*stage - w - (adaaOn ? 0.5*w: 0.0);
+  };
+  double lo = 1.0e-6, hi = pi - 1.0e-6;
+  for (int i = 0; i < 60; ++i) {
+    const double mid = 0.5*(lo + hi);
+    if (loopPhase(mid) > -pi) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+
+  const double w = 0.5*(lo + hi);
+  const double stageMag = b0 * 2.0 * std::cos(0.5*w)/ std::sqrt(1.0 + 2.0*a1*std::cos(w) + a1*a1);
+  double mag = std::pow(stageMag, 4.0);
+  if (adaaOn) {
+    mag *= std::cos(0.5*w);
+  }
+  return 1.0/mag;
+}
+
 double ParameterSmoother::step()
 {
   double varargout_1;
