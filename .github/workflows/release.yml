@@ -1,0 +1,71 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: windows-latest, name: Windows }
+          - {os: macos-latest, name: macOS }
+          - {os: ubuntu-latest, name: Linux }
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libx11-dev libxcomposite-dev \
+            libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev \
+            libxrender-dev libxi-dev libfreetype-dev libfontconfig1-dev \
+            libgl1-mesa-dev
+            
+      - name: Configure
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          else
+            cmake -B build -DCMAKE_BUILD_TYPE=Release
+          fi
+          
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Package
+        run: |
+          ART=build/MoogLadderPlugin_artefacts/Release
+          OUT=CorporateLadderFilter
+          mkdir -p stage/$OUT dist
+          cp -R "$ART/VST3/CorporateLadderFilter.vst3" stage/$OUT/
+          cp -R "$ART"/Standalone/CorporateLadderFilter* stage/$OUT/
+          cp README.md stage/$OUT/
+          ZIP="$PWD/dist/CorporateLadderFilter-${{ github.ref_name }}-${{ matrix.name }}.zip"
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            ditto -c -k --keepParent stage/$OUT "$ZIP"
+          else
+            (cd stage && cmake -E tar cf "$ZIP" --format=zip $OUT)
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ matrix.name }}
+          path: dist/*.zip
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: package-*
+          merge-multiple: true
+          path: dist
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/*.zip --repo "${{ github.repository }}" --title "${{ github.ref_name }}" --generate-notes
