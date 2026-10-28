@@ -57,7 +57,7 @@ public:
   double drv_F_prev[2];
   double fb_x_prev[2];
   double fb_F_prev[2];
-  static const int kOnsetTableSize = 64;
+  static const int kOnsetTableSize = 128;
   double kOnsetTable[2][kOnsetTableSize];
   double kOnsetLogLo;
   double kOnsetLogStep;

@@ -289,7 +289,7 @@ void processEntryPoint(MoogLadderPluginStackData *SD, double samplesPerFrame,
   fs_buffer = plugin->fs;
   fc = plugin->CutoffSmoother.step();
   drive_out = plugin->ResonanceSmoother.step();
-  kLimit = plugin->kLimitingFactor;
+  // kLimit = plugin->kLimitingFactor;
   gain = coder::mpower(plugin->GainSmoother.step() / 20.0);
   for (int n{0}; n < 8; n++) {
     wnm1_buffer[n] = plugin->wnm1[n];
@@ -309,7 +309,18 @@ void processEntryPoint(MoogLadderPluginStackData *SD, double samplesPerFrame,
   //  moog_coeffs function + frequency-dependent k-limiting
   df = fs_buffer * 0.45;
   fc = std::fmin(fc, df);
-  k = std::fmin(drive_out, 3.99 * (1.0 - kLimit * (fc / df)));
+  // k = std::fmin(drive_out, 3.99 * (1.0 - kLimit * (fc / df))); Instead we implement recalculation
+  // of kOn
+  const int tbl = plugin->ADAA_bypass_flag ? 0 : 1;
+  double pos = (std::log(fc) - plugin->kOnsetLogLo) / plugin->kOnsetLogStep;
+  pos = std::fmax(0.0, std::fmin(pos, derivedAudioPlugin::kOnsetTableSize - 1.0));
+  const int i0 = static_cast<int>(pos);
+  const int i1 = std::min(i0 + 1, derivedAudioPlugin::kOnsetTableSize - 1);
+  const double frac = pos - static_cast<double>(i0);
+  const double kOn = plugin->kOnsetTable[tbl][i0] + frac*(plugin->kOnsetTable[tbl][i1] - plugin->kOnsetTable[tbl][i0]);
+  const double kEdgeMargine = 0.99;
+  k = std::fmin(std::fmax(drive_out, 0.0), 1.0) * kOn * kEdgeMargin;
+  
   fc = std::tan(3.1415926535897931 * fc / fs_buffer);
   num0 = fc / (fc + 1.0);
   den1 = (fc - 1.0) / (fc + 1.0);

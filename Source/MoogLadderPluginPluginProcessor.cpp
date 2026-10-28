@@ -59,8 +59,8 @@ public:
           parameters(*this, nullptr, "MoogLadderPlugin", {
                 std::make_unique<Parameter>("Cutoff", juce::String::fromUTF8(u8"Cutoff"), juce::String::fromUTF8(u8"Hz"),
                     NormalisableRange<float>(20.f,20000.f,[](float min, float max, float norm) {return min*powf(max/min,norm);}, [](float min, float max, float val) {return logf(val/min)/logf(max/min);}), 2000.f, [](float val) {return String(val, 3);}, nullptr),
-                std::make_unique<Parameter>("Resonance", juce::String::fromUTF8(u8"Resonance"), juce::String::fromUTF8(u8"k"),
-                    NormalisableRange<float>(0.f,3.99f,0.f,0.333333f), 0.f, [](float val) {return String(val, 3);}, nullptr),
+                std::make_unique<Parameter>("Resonance", juce::String::fromUTF8(u8"Resonance"), juce::String::fromUTF8(u8"%"),
+                    NormalisableRange<float>(0.f,1.f), 0.f, [](float val) {return String(val*100.f, 1);}, [](const String& text){return text.getFloatValue()/100.f;}),
                 std::make_unique<Parameter>("Gain", juce::String::fromUTF8(u8"Gain"), juce::String::fromUTF8(u8"db"),
                     NormalisableRange<float>(-60.f,12.f), 0.f, [](float val) {return String(val, 3);}, nullptr),
                 std::make_unique<Parameter>("bypass", juce::String::fromUTF8(u8"Plugin"), juce::String::fromUTF8(u8""),
@@ -119,10 +119,10 @@ public:
         //
         // Parameter property Resonance
         //
-        parameters.createAndAddParameter ("Resonance", juce::String::fromUTF8(u8"Resonance"), juce::String::fromUTF8(u8"k"),
-            NormalisableRange<float>(0.f, 3.99f, 0.f, 0.333333f), 0.f,
-            [](float val) {return String(val, 3);},
-            nullptr);
+        parameters.createAndAddParameter ("Resonance", juce::String::fromUTF8(u8"Resonance"), juce::String::fromUTF8(u8"%"),
+            NormalisableRange<float>(0.f, 1.f), 0.f,
+            [](float val) {return String(val*100.f, 1);},
+            [](const String& text) {return text.getFloatValue() / 100.f;});
         parameters.addParameterListener("Resonance", &paramListener);
 
         //

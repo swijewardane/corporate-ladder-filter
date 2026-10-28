@@ -8,7 +8,8 @@ set(JUCE_DISABLE_JUCE_AUDIO_PROCESSORS_HEADLESS_ENABLED OFF)
 include(FetchContent)
 FetchContent_Declare(JUCE
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
-    GIT_TAG origin/develop
+    GIT_TAG 9.0.4
+    GIT_SHALLOW TRUE
 )
 # set(JUCE_VST3_CAN_REPLACE_VST2 OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(JUCE)
