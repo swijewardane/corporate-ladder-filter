@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.22)
 project(MoogLadderPlugin VERSION 1.0.0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(JUCE_MODULES_DIR "C:/Program Files/JUCE/modules")
 set(JUCE_DISABLE_JUCE_AUDIO_PROCESSORS_HEADLESS_ENABLED OFF)
 include(FetchContent)
 FetchContent_Declare(JUCE
