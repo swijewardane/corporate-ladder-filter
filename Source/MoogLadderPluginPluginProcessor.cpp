@@ -258,7 +258,7 @@ public:
     int getNumPrograms() override                       { return 1;  }
     int getCurrentProgram() override                    { return 0;  }
     void setCurrentProgram (int index) override         { (void) index; }
-    const String getProgramName (int index) override    { (void) index; return {}; }
+    const String getProgramName (int index) override    { (void) index; return "Default"; }
     void changeProgramName (int index, const String& newName) override  { (void) index; (void) newName; }
     
     //==============================================================================
