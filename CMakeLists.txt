@@ -19,6 +19,7 @@ set(JUCE_ENABLE_MODULE_SOURCE_GROUPS OFF)
 
 juce_add_plugin(MoogLadderPlugin
     PLUGIN_NAME "Corporate Ladder Filter"
+    PRODUCT_NAME "CorporateLadderFilter"
     PLUGIN_MANUFACTURER_CODE Saha
     PLUGIN_CODE SCLF
     FORMATS VST3 Standalone
