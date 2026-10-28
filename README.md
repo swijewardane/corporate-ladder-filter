@@ -3,7 +3,7 @@
 *A digital emulation of the classic analog Moog ladder filter, built as a VST3/Standalone plugin. Named after the 'corporate ladder' and styled after a 70s retro-futurist aesthetic. Think Lumon Industries from Severance — clean, cold, corporate.*
 
 [![Build](https://github.com/swijewardane/corporate-ladder-filter/actions/workflows/build.yml/badge.svg)](https://github.com/swijewardane/corporate-ladder-filter/actions)
-
+[![Release](https://github.com/swijewardane/corporate-ladder-filter/actions/workflows/release.yml/badge.svg)](https://github.com/swijewardane/corporate-ladder-filter/actions)
 
 ![Corporate Ladder Filter GUI](Figures/plugin_in_DAW.png)
 
