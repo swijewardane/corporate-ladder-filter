@@ -318,9 +318,9 @@ void processEntryPoint(MoogLadderPluginStackData *SD, double samplesPerFrame,
   const int i1 = std::min(i0 + 1, derivedAudioPlugin::kOnsetTableSize - 1);
   const double frac = pos - static_cast<double>(i0);
   const double kOn = plugin->kOnsetTable[tbl][i0] + frac*(plugin->kOnsetTable[tbl][i1] - plugin->kOnsetTable[tbl][i0]);
-  const double kEdgeMargine = 0.99;
+  const double kEdgeMargin = 0.99;
   k = std::fmin(std::fmax(drive_out, 0.0), 1.0) * kOn * kEdgeMargin;
-  
+
   fc = std::tan(3.1415926535897931 * fc / fs_buffer);
   num0 = fc / (fc + 1.0);
   den1 = (fc - 1.0) / (fc + 1.0);
