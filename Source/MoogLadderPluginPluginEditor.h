@@ -239,6 +239,8 @@ public:
 
     void findFilmStripFrame(float sliderPosProportional, int& frameX, int& frameY)
     {
+        if (invertFrames)
+            sliderPosProportional = 1.0f - sliderPosProportional;
         int frameNumber = jmin(static_cast<int>(floorf(sliderPosProportional * nFrames)), nFrames - 1);
         if (isVertical) {
             frameX = 0;
@@ -308,6 +310,8 @@ public:
         float proportion = button.getToggleState() ? 1.f : 0.f;
         drawFilmStripFrame(g, x, y, width, height, proportion);
     }
+
+    bool invertFrames = false;
 
 private:
     Image filmStrip;
@@ -583,6 +587,7 @@ public:
         appdeslnf.setDefaultSansSerifTypeface(noto);
         BOS_knob_AutofilterPan_72x72_128fLnF.setDefaultSansSerifTypeface(noto);
         ST_button_pwr_30x30_6fLnF.setDefaultSansSerifTypeface(noto);
+        ST_button_pwr_30x30_6fLnF.invertFrames = true;
         ST_fader_10X198_128fLnF.setDefaultSansSerifTypeface(noto);
 
         backgroundImage = ImageCache::getFromMemory(CORPORATELADDERFILTERFile, CORPORATELADDERFILTERFileSize);
