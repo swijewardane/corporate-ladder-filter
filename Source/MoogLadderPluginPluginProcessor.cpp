@@ -55,7 +55,10 @@ class MoogLadderPluginAudioProcessor  : public AudioProcessor
 
 public:
     MoogLadderPluginAudioProcessor()
-        : paramListener(&mStackData),
+        : AudioProcessor(BusesProperties()
+            .withInput("Input", AudioChannelSet::stereo(), true)
+            .withOutput("Output", AudioChannelSet::stereo(), true)),
+          paramListener(&mStackData),
           parameters(*this, nullptr, "MoogLadderPlugin", {
                 std::make_unique<Parameter>("Cutoff", juce::String::fromUTF8(u8"Cutoff"), juce::String::fromUTF8(u8"Hz"),
                     NormalisableRange<float>(20.f,20000.f,[](float min, float max, float norm) {return min*powf(max/min,norm);}, [](float min, float max, float val) {return logf(val/min)/logf(max/min);}), 2000.f, [](float val) {return String(val, 3);}, nullptr),
